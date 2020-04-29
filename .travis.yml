@@ -29,7 +29,7 @@ compiler:
 before_install:
 
 # Añadir fuentes
-  - sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+  - sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y
 
 # Actualizar
 
