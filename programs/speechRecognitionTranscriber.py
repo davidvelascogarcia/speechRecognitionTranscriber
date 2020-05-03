@@ -36,6 +36,13 @@ originalFilePath = input()
 print("Reading file "+originalFilePath+" ...")
 originalFile = AudioSegment.from_file(originalFilePath)
 
+print("")
+print("")
+print("**************************************************************************")
+print("Converting file to .wav:")
+print("**************************************************************************")
+print("")
+
 # Convert file to .wav
 print("Converting "+originalFilePath+" to convertedFile.wav ...")
 originalFile.export("convertedFile.wav", format="wav")
@@ -53,6 +60,12 @@ convertedFile = AudioSegment.from_wav(convertedFilePath)
 print("Transcribed text will be save on transcribedText.txt file")
 transcribedFile = open("transcribedText.txt", "w+")
 
+print("")
+print("")
+print("**************************************************************************")
+print("Processing split on silence:")
+print("**************************************************************************")
+print("")
 print("Configuring split on silence ...")
 fragments = split_on_silence(convertedFile, min_silence_len = 500, silence_thresh = -45)
 
@@ -68,17 +81,31 @@ os.chdir('fragments')
 
 i = 0
 
+print("")
+print("")
+print("**************************************************************************")
+print("Processing:")
+print("**************************************************************************")
+print("")
+
 for fragment in fragments:
 
     fragmentSilent = AudioSegment.silent(duration = 10)
+    print("")
     print("Building audio fragment ...")
+    print("")
     audioFragment = fragmentSilent + fragment + fragmentSilent
 
+    print("")
     print("Saving audioFragment{0}.wav".format(i))
+    print("")
     audioFragment.export("./audioFragment{0}.wav".format(i), bitrate ='192k', format ="wav")
     audioFragmentFileName = 'audioFragment'+str(i)+'.wav'
 
+    print("")
     print("Recognizing audio fragment "+str(i)+" ...")
+    print("")
+
     audioFragmentFile = audioFragmentFileName
 
     # Init speechRecognition engine
@@ -98,19 +125,28 @@ for fragment in fragments:
         # Write into file
         transcribedFile.write(recognizedText+".\n")
         print("Recognized: "+recognizedText)
+	print("**************************************************************************")
 
 
     except sr.UnknownValueError:
         print("")
-        print("Error, Request Google Speech API.")
+        print("I couldn´t understand anything.")
         print("")
+        print("**************************************************************************")
 
     except sr.RequestError as e:
         print("")
-        print("Unknown Error")
+        print("Error, Request Google Speech API.")
         print("")
+        print("**************************************************************************")
 
     i += 1
 
 os.chdir('..')
 print("File transcription finished.")
+
+print("")
+print("")
+print("**************************************************************************")
+print("Program finished")
+print("**************************************************************************")
