@@ -29,6 +29,7 @@ print("")
 print("Loading Speech Recognition Transcriber module ...")
 
 # Enter file path
+print("")
 print("Please, enter the file path:")
 originalFilePath = input()
 
@@ -125,7 +126,7 @@ for fragment in fragments:
         # Write into file
         transcribedFile.write(recognizedText+".\n")
         print("Recognized: "+recognizedText)
-	print("**************************************************************************")
+        print("**************************************************************************")
 
 
     except sr.UnknownValueError:
