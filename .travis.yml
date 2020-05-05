@@ -58,6 +58,10 @@ install:
 
   - sudo pip install pydub
 
+# Instalar fpdf
+
+  - sudo pip install fpdf
+
 # Instalar SpeechRecognition
 
   - sudo pip install SpeechRecognition

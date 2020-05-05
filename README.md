@@ -44,6 +44,11 @@ NOTE:
 ```bash
 pip install SpeechRecognition
 ```
+* Install fpdf:
+
+```bash
+pip install fpdf
+```
 * Install pydub
 
 ```bash
@@ -51,7 +56,7 @@ pip install pydub
 ```
 * Install ffmpeg
 
-**Linux** **
+**Linux**
 
 ```bash
 sudo apt-get install ffmpeg
