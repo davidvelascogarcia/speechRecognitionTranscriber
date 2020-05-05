@@ -8,11 +8,13 @@
 '''
 
 # Libraries
+from fpdf import FPDF
 import os
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from pydub.utils import make_chunks
 import speech_recognition as sr
+import shutil
 import time
 
 
@@ -276,10 +278,93 @@ for fragment in fragments:
 
 
 os.chdir('..')
+transcribedOutputFile.close()
 print("File transcription finished.")
+print("")
+print("")
+print("**************************************************************************")
+print("Transcription finished")
+print("**************************************************************************")
+print("")
+print("")
+print("Finishing program ...")
+print("")
+print("")
 
+# Export to PDF
+print("**************************************************************************")
+print("Exporting to PDF:")
+print("**************************************************************************")
+print("")
+print("")
+print("Exporting to PDF ...")
+print("")
+
+# PDF object
+pdfObject = FPDF('P', 'mm', 'A4')
+
+# Add page
+pdfObject.add_page()
+
+# Set font and size
+pdfObject.set_font("times", size = 12)
+
+# Set margins
+pdfObject.set_margins(20, 20, 20)
+
+# Add title
+pdfObjectTitle = transcribedFileName
+pdfObjectTitle = pdfObjectTitle.replace(".txt", "")
+pdfObjectTitle =str(pdfObjectTitle).upper()
+pdfObject.set_font("times", size = 18)
+pdfObject.cell(0, 0, str(pdfObjectTitle), align='C')
+
+# Add new page
+pdfObject.add_page()
+
+# Re-set font and size
+pdfObject.set_font("times", size = 12)
+
+# Open source to get data
+textSource = open(str(transcribedFileName),"r")
+
+for fileLine in textSource:
+    pdfObject.multi_cell(157, 10, str(fileLine), 0, 'J' , 0)
+
+# Close .text
+textSource.close()
+
+# Prepare output PDF name and export
+pdfOutputName = str(transcribedFileName)
+pdfOutputName = pdfOutputName.replace(".txt", ".pdf")
+pdfObject.output(str(pdfOutputName))
+
+print("")
+print("File exported to PDF.")
+print("")
+
+# Clean temporal data
+print("**************************************************************************")
+print("Cleaning temporal data:")
+print("**************************************************************************")
+print("")
+print("Cleaning temporal data ...")
+
+try:
+    os.remove("convertedFile.wav")
+    print("convertedFile.wav temporal file deleted.")
+    shutil.rmtree('fragments')
+    print("fragments temporal directoty deleted.")
+
+except:
+    print("I couldn´t delete convertedFile.wav and fragments directoty. Please, manual delete.")
 print("")
 print("")
 print("**************************************************************************")
 print("Program finished")
 print("**************************************************************************")
+print("")
+print("")
+
+# Enter to exit
+exitProgram = input("Press any key to close.")
