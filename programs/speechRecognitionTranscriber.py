@@ -300,48 +300,56 @@ print("")
 print("Exporting to PDF ...")
 print("")
 
-# PDF object
-pdfObject = FPDF('P', 'mm', 'A4')
+try:
+    # PDF object
+    pdfObject = FPDF('P', 'mm', 'A4')
 
-# Add page
-pdfObject.add_page()
+    # Add page
+    pdfObject.add_page()
 
-# Set font and size
-pdfObject.set_font("times", size = 12)
+    # Set font and size
+    pdfObject.set_font('Times', size = 12)
 
-# Set margins
-pdfObject.set_margins(20, 20, 20)
+    # Set margins
+    pdfObject.set_margins(20, 20, 20)
 
-# Add title
-pdfObjectTitle = transcribedFileName
-pdfObjectTitle = pdfObjectTitle.replace(".txt", "")
-pdfObjectTitle =str(pdfObjectTitle).upper()
-pdfObject.set_font("times", size = 18)
-pdfObject.cell(0, 0, str(pdfObjectTitle), align='C')
+    # Add title
+    pdfObjectTitle = transcribedFileName
+    pdfObjectTitle = pdfObjectTitle.replace(".txt", "")
+    pdfObjectTitle = str(pdfObjectTitle).upper()
+    pdfObjectTitle = pdfObjectTitle.replace("_"," ")
+    pdfObjectTitle = pdfObjectTitle.replace("-"," ")
+    pdfObject.set_font('Times', 'B', size = 18)
+    pdfObject.cell(0, 0, str(pdfObjectTitle), align='C')
 
-# Add new page
-pdfObject.add_page()
+    # Add new page
+    pdfObject.add_page()
 
-# Re-set font and size
-pdfObject.set_font("times", size = 12)
+    # Re-set font and size
+    pdfObject.set_font('Times', size = 12)
 
-# Open source to get data
-textSource = open(str(transcribedFileName),"r")
+    # Open source to get data
+    textSource = open(str(transcribedFileName),"r")
 
-for fileLine in textSource:
-    pdfObject.multi_cell(157, 10, str(fileLine), 0, 'J' , 0)
+    for fileLine in textSource:
+        pdfObject.multi_cell(157, 10, str(fileLine), 0, 'J' , 0)
 
-# Close .text
-textSource.close()
+    # Close .text
+    textSource.close()
 
-# Prepare output PDF name and export
-pdfOutputName = str(transcribedFileName)
-pdfOutputName = pdfOutputName.replace(".txt", ".pdf")
-pdfObject.output(str(pdfOutputName))
+    # Prepare output PDF name and export
+    pdfOutputName = str(transcribedFileName)
+    pdfOutputName = pdfOutputName.replace(".txt", ".pdf")
+    pdfObject.output(str(pdfOutputName))
 
-print("")
-print("File exported to PDF.")
-print("")
+    print("")
+    print("File exported to PDF.")
+    print("")
+
+except:
+    print("")
+    print("Sorry, I couldn´t export to PDF this file. Some characters had errors, but transcribed text is saved correctly in .txt format.")
+    print("")
 
 # Clean temporal data
 print("**************************************************************************")
@@ -358,6 +366,7 @@ try:
 
 except:
     print("I couldn´t delete convertedFile.wav and fragments directoty. Please, manual delete.")
+    
 print("")
 print("")
 print("**************************************************************************")
