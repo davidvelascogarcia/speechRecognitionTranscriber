@@ -31,8 +31,11 @@ yourfile.extension
 NOTE:
 
 - Transcribed text is saved in `transcribedText.txt`.
+- Transcribed text is saved in `transcribedText.pdf`.
 - Audio fragments are saved in `/fragments`.
 - Converted source is saved as `convertedFile.wav`.
+
+Temporal files like `cconvertedFile.wav` and `/fragments` are deleted when program ends.
 
 ## Requirements
 
