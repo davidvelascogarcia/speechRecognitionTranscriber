@@ -4,10 +4,10 @@
  *      Type: Python
  *      Author: David Velasco Garcia @davidvelascogarcia
  * ************************************************************
- */
 '''
 
 # Libraries
+import datetime
 from fpdf import FPDF
 import os
 from pydub import AudioSegment
@@ -28,41 +28,52 @@ print("*************************************************************************
 
 print("")
 print("Starting system ...")
+print("")
 
 print("")
 print("Loading Speech Recognition Transcriber module ...")
+print("")
 
 # Check file exist
 loopFileExist = 0
 
-while int(loopFileExist)==0:
+while int(loopFileExist) == 0:
+    
+    try:
+        print("")
+        print("**************************************************************************")
+        print("Enter file path:")
+        print("**************************************************************************")
+        print("")
 
-	try:
-		# Enter file path
-		print("")
-		print("Please, enter the file path:")
-		originalFilePath = input()
+        # Enter file path
+        print("")
+        print("[INFO] Please, enter the file path:")
+        print("")
 
-		print("")
-		print("")
-		print("**************************************************************************")
-		print("Reading original file:")
-		print("**************************************************************************")
-		print("")
+        originalFilePath = input()
 
-		# Read file path
-		print("Reading file "+originalFilePath+" ...")
-		originalFile = AudioSegment.from_file(originalFilePath)
-		originalFile = originalFile.set_channels(1)
-		loopFileExist = 1
+        print("")
+        print("**************************************************************************")
+        print("Reading original file:")
+        print("**************************************************************************")
+        print("")
 
-	except:
-		# File not exists
-		print("")
-		print("Sorry, this file not exist re-enter correct name and extension again.")
-		print("")
+        # Read file path
+        print("")
+        print("[INFO] Reading file " + originalFilePath + " at " + str(datetime.datetime.now()) + " ...")
+        print("")
 
-print("")
+        originalFile = AudioSegment.from_file(originalFilePath)
+        originalFile = originalFile.set_channels(1)
+        loopFileExist = 1
+
+    except:
+        # File not exists
+        print("")
+        print("[ERROR] Sorry, this file not exist re-enter correct name and extension again.")
+        print("")
+
 print("")
 print("**************************************************************************")
 print("Converting file to .wav:")
@@ -70,10 +81,16 @@ print("*************************************************************************
 print("")
 
 # Convert file to .wav
-print("Converting "+originalFilePath+" to convertedFile.wav ...")
+print("")
+print("[INFO] Converting " + originalFilePath + " to convertedFile.wav at " + str(datetime.datetime.now()) + " ...")
+print("")
+
 originalFile.export("convertedFile.wav", format="wav")
 convertedFilePath = "convertedFile.wav"
-print("File converted.")
+
+print("")
+print("[INFO] File converted.")
+print("")
 
 print("")
 print("Initializing Speech Recognition engine ...")
@@ -85,7 +102,10 @@ print("*************************************************************************
 print("")
 
 # Read file path
-print("Reading file "+convertedFilePath+" ...")
+print("")
+print("[INFO] Reading file " + convertedFilePath + " at " + str(datetime.datetime.now()) + " ...")
+print("")
+
 convertedFile = AudioSegment.from_wav(convertedFilePath)
 
 # Configure transcribedText
@@ -105,22 +125,25 @@ transcribedFileName = transcribedFileName.replace(".mpeg","")
 transcribedFileName = transcribedFileName.replace(".flv","")
 transcribedFileName = transcribedFileName.replace(".mpeg4","")
 transcribedFileName = transcribedFileName.replace(".mpg","")
-transcribedFileName = transcribedFileName+".txt"
-
-print("Transcribed text will be save on "+str(transcribedFileName)+" file.")
-transcribedOutputFile = open(str(transcribedFileName), "w+")
+transcribedFileName = transcribedFileName + ".txt"
 
 print("")
+print("[INFO] Transcribed text will be save on " + str(transcribedFileName) + " file.")
+print("")
+
+transcribedOutputFile = open(str(transcribedFileName), "w+")
+
 print("")
 print("**************************************************************************")
 print("Split configuration:")
 print("**************************************************************************")
 print("")
 print("Configuring split mode ...")
+print("")
 
 loopControl = 0
 
-while int(loopControl)==0:
+while int(loopControl) == 0:
 
 	print("")
 	print("Do you want to make split by time or by silence method?.")
@@ -129,56 +152,57 @@ while int(loopControl)==0:
 	print("2. By time")
 	print("")
 	print("Enter your split selection:")
+
 	splitSelection = input()
 
-	if int(splitSelection)==1:
+	if int(splitSelection) == 1:
 
 		print("")
-		print("Split by silence has been selected.")
+		print("[INFO] Split by silence has been selected.")
 		print("")
+
 		loopControl = 1
 
-	elif int(splitSelection)==2:
+	elif int(splitSelection) == 2:
 
 		print("")
-		print("Split by time has been selected.")
+		print("[INFO] Split by time has been selected.")
 		print("")
+
 		loopControl = 1
 
 	else:
 		print("")
-		print("Sorry, option not available, enter your split selection again.")
+		print("[ERROR] Sorry, option not available, enter your split selection again.")
 		print("")
 
+if int(splitSelection) == 1:
 
-
-if int(splitSelection)==1:
-
-	print("")
 	print("")
 	print("**************************************************************************")
 	print("Processing split on silence:")
 	print("**************************************************************************")
 	print("")
-	print("Configuring split on silence ...")
+	print("[INFO] Configuring split on silence ...")
 	print("")
+
 	fragments = split_on_silence(convertedFile, min_silence_len = 500, silence_thresh = -45)
 
-if int(splitSelection)==2:
+if int(splitSelection) == 2:
 
-	print("")
 	print("")
 	print("**************************************************************************")
 	print("Processing split on time:")
 	print("**************************************************************************")
 	print("")
-	print("Configuring split on time ...")
+	print("[INFO] Configuring split on time ...")
 	print("")
+
 	fragmentTime = 1000*55
 	fragments = make_chunks(convertedFile, fragmentTime)
 
 try:
-    print("Creating audio fragments dir ...")
+    print("[INFO] Creating audio fragments dir ...")
     os.mkdir('fragments')
 
 except(FileExistsError):
@@ -189,32 +213,38 @@ os.chdir('fragments')
 
 i = 0
 
-print("")
+
 print("")
 print("**************************************************************************")
-print("Processing:")
+print("Processing request:")
 print("**************************************************************************")
 print("")
 
 for fragment in fragments:
 
+    print("")
+    print("[INFO] Building audio fragment at " + str(datetime.datetime.now()) + " ...")
+    print("")
+
     fragmentSilent = AudioSegment.silent(duration = 10)
+
     print("")
-    print("Building audio fragment ...")
-    print("Build done.")
+    print("[INFO] Build done.")
     print("")
+
     audioFragment = fragmentSilent + fragment + fragmentSilent
 
     print("")
-    print("Saving audioFragment{0}.wav".format(i))
-    print("Audio saved.")
+    print("[INFO] Saving audioFragment{0}.wav".format(i))
+    print("[INFO] Audio saved.")
     print("")
+
     audioFragment.export("./audioFragment{0}.wav".format(i), bitrate ='192k', format ="wav")
     audioFragmentFileName = 'audioFragment'+str(i)+'.wav'
 
     print("")
-    print("Recognizing audio fragment "+str(i)+" ...")
-
+    print("[INFO] Recognizing audio fragment " + str(i) + " at " + str(datetime.datetime.now()) + " ...")
+    print("")
 
     audioFragmentFile = audioFragmentFileName
 
@@ -230,12 +260,17 @@ for fragment in fragments:
     try:
         # Recognizing audio
         recognizedText = speechRecognitionEngine.recognize_google(audioListened, language="es-ES")
-        print("Audio recognized.")
+
+        print("")
+        print("[INFO] Audio recognized at " + str(datetime.datetime.now()) + ".")
+        print("")
+
         # Write into file
         transcribedOutputFile.write(recognizedText+".\n")
+
         print("**************************************************************************")
         print("**************************************************************************")
-        print("Recognized: ")
+        print("Recognized text: ")
         print("**************************************************************************")
         print("**************************************************************************")
         print("")
@@ -243,24 +278,26 @@ for fragment in fragments:
         print("")
 
     except sr.UnknownValueError:
+
         print("**************************************************************************")
         print("**************************************************************************")
         print("ERROR Understanding:")
         print("**************************************************************************")
         print("**************************************************************************")
         print("")
-        print("I couldn´t understand anything.")
+        print("[ERROR] I couldn´t understand anything.")
         print("")
 
 
     except sr.RequestError as e:
+
         print("**************************************************************************")
         print("**************************************************************************")
         print("ERROR Request:")
         print("**************************************************************************")
         print("**************************************************************************")
         print("")
-        print("Error, Request Google Speech API.")
+        print("[ERROR] Error, Request Google Speech API.")
         print("")
 
 
@@ -271,33 +308,35 @@ for fragment in fragments:
     print("**************************************************************************")
     print("**************************************************************************")
     print("")
-    print("Waiting 3 seconds to next request ...")
+    print("[INFO] Waiting 3 seconds to next request ...")
     print("")
+
     time.sleep(3)
     i += 1
 
 
 os.chdir('..')
 transcribedOutputFile.close()
-print("File transcription finished.")
+
 print("")
+print("[INFO] File transcription finished at " + str(datetime.datetime.now()) + ".")
+print("")
+
 print("")
 print("**************************************************************************")
 print("Transcription finished")
 print("**************************************************************************")
 print("")
-print("")
-print("Finishing program ...")
-print("")
+print("[INFO] Finishing program ...")
 print("")
 
 # Export to PDF
+print("")
 print("**************************************************************************")
 print("Exporting to PDF:")
 print("**************************************************************************")
 print("")
-print("")
-print("Exporting to PDF ...")
+print("[INFO] Exporting to PDF ...")
 print("")
 
 try:
@@ -343,36 +382,46 @@ try:
     pdfObject.output(str(pdfOutputName))
 
     print("")
-    print("File exported to PDF.")
+    print("[INFO] File exported to PDF.")
     print("")
 
 except:
     print("")
-    print("Sorry, I couldn´t export to PDF this file. Some characters had errors, but transcribed text is saved correctly in .txt format.")
+    print("[ERROR] Sorry, I couldn´t export to PDF this file. Some characters had errors, but transcribed text is saved correctly in .txt format.")
     print("")
 
 # Clean temporal data
+print("")
 print("**************************************************************************")
 print("Cleaning temporal data:")
 print("**************************************************************************")
 print("")
-print("Cleaning temporal data ...")
+print("[INFO] Cleaning temporal data ...")
 
 try:
     os.remove("convertedFile.wav")
-    print("convertedFile.wav temporal file deleted.")
+
+    print("")
+    print("[INFO] convertedFile.wav temporal file deleted.")
+    print("")
+
     shutil.rmtree('fragments')
-    print("fragments temporal directoty deleted.")
+
+    print("")
+    print("[INFO] fragments temporal directoty deleted.")
+    print("")
 
 except:
-    print("I couldn´t delete convertedFile.wav and fragments directoty. Please, manual delete.")
-    
+    print("[ERROR] I couldn´t delete convertedFile.wav and fragments directoty. Please, manual delete.")
+
 print("")
 print("")
 print("**************************************************************************")
 print("Program finished")
 print("**************************************************************************")
 print("")
+print("")
+print("speechRecognitionTranscriber program finished correctly.")
 print("")
 
 # Enter to exit
